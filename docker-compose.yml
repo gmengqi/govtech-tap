@@ -5,6 +5,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/football  # Use the internal port 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
     ports:
       - "8080:8080"
     depends_on:
@@ -19,18 +23,18 @@ services:
     ports:
       - "3000:3000"
     environment:
-      REACT_APP_API_URL: http://localhost:8080/api  # Use backend service name for inter-service communication
+      REACT_APP_API_URL: http://localhost:8080/api  # This is fine for frontend-backend communication
     networks:
-        - my-network
+      - my-network
 
   db:
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_DB: football  # Fixed the POSTGRES_DB value to match the name of the database
     ports:
-      - "5434:5434"
+      - "5434:5432"  # Expose the internal port 5432 as 5434 on the host machine
     networks:
       - my-network
 
